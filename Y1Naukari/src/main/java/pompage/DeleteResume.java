@@ -57,72 +57,75 @@ public class DeleteResume {
 		deleteButton.click();
 		deletePopup.click();
 	//    uploadResume.click();
-		 uploadResume.sendKeys("C:\\Users\\Admin\\Downloads\\Pritesh_3.7_Exp.pdf");
+		 uploadResume.sendKeys("C:\\Users\\Admin\\Downloads\\Pritesh_3.7_Exp.pdf.pdf");
 //		Actions actions = new Actions(driver);
 //		actions.moveToElement(uploadResume).click().perform();
 		}
 	
 	public void resumeHeadline()
 	{
-		 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	    JavascriptExecutor js = (JavascriptExecutor) driver;
 
-		    // Step 1: Wait for visibility and scroll into view first
-		    wait.until(ExpectedConditions.visibilityOf(resumeHeadline));
-		    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", resumeHeadline);
+	    // Step 1: Wait for visibility and scroll into view first
+	    wait.until(ExpectedConditions.visibilityOf(resumeHeadline));
+	    js.executeScript("arguments[0].scrollIntoView(true);", resumeHeadline);
 
-		    // Step 2: Wait until clickable (ensure it's not hidden under overlay)
-		    wait.until(ExpectedConditions.elementToBeClickable(resumeHeadline));
+	    // Step 2: Wait until clickable
+	    wait.until(ExpectedConditions.elementToBeClickable(resumeHeadline));
 
-		    // Step 3: Click using JavaScript to avoid intercept issues
-		    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", resumeHeadline);
+	    // Step 3: Click using JavaScript
+	    js.executeScript("arguments[0].click();", resumeHeadline);
 
-		    // Step 4: Resume normal flow
-		    wait.until(ExpectedConditions.visibilityOf(resumeHeadlineTextArea));
-		    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", resumeHeadlineTextArea);
+	    // Step 4: Edit headline
+	    wait.until(ExpectedConditions.visibilityOf(resumeHeadlineTextArea));
+	    js.executeScript("arguments[0].scrollIntoView(true);", resumeHeadlineTextArea);
 
-		    String oldText = resumeHeadlineTextArea.getAttribute("value");
+	    String oldText = resumeHeadlineTextArea.getAttribute("value");
 
-		    // Optional: clean + add jenkins.
-		    if (oldText.contains("jenkins.")) {
-		        oldText = oldText.replace("jenkins.", "");
-		    }
-		    String newText = oldText.trim() + " jenkins.";
+	    if (oldText.contains("jenkins.")) {
+	        oldText = oldText.replace("jenkins.", "");
+	    }
+	    String newText = oldText.trim() + " jenkins.";
 
-		    resumeHeadlineTextArea.clear();
-		    resumeHeadlineTextArea.sendKeys(newText);
+	    resumeHeadlineTextArea.clear();
+	    resumeHeadlineTextArea.sendKeys(newText);
 
-		    wait.until(ExpectedConditions.elementToBeClickable(saveHeadlineButton)).click();
+	    // Step 5: Save changes using JavaScript click
+	    wait.until(ExpectedConditions.elementToBeClickable(saveHeadlineButton));
+	    js.executeScript("arguments[0].click();", saveHeadlineButton);
+	
 		    }
 	
      public void keySkills()
      {
     	 WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+    	    JavascriptExecutor js = (JavascriptExecutor) driver;
 
- 	    // Step 1: Open the edit popup
- 	    wait.until(ExpectedConditions.visibilityOf(keySkills));
- 	    ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", keySkills);
- 	    wait.until(ExpectedConditions.elementToBeClickable(keySkills));
- 	    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", keySkills);
+    	    try {
+    	        // Click the edit icon
+    	        wait.until(ExpectedConditions.elementToBeClickable(keySkills));
+    	        js.executeScript("arguments[0].scrollIntoView(true); arguments[0].click();", keySkills);
 
- 	    // Step 2: Delete "BBT" if exists
- 	    try {
- 	        wait.until(ExpectedConditions.visibilityOf(keySkillPopup));
- 	        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", keySkillPopup);
- 	    } catch (Exception e) {
- 	        System.out.println("Skill 'BBT' was not found to delete. Proceeding to add.");
- 	    }
+    	        // Wait for the input to appear
+    	        WebElement input = wait.until(ExpectedConditions.elementToBeClickable(By.id("keySkillInput")));
+    	        js.executeScript("arguments[0].scrollIntoView(true);", input);
+    	        input.click();
+    	        input.sendKeys("BBT");
 
- 	    // Step 3: Add the skill "BBT"
- 	    WebElement addSkillInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("keySkillSugg")));
- 	    addSkillInput.sendKeys("BBT");
+    	        // Wait for suggestion box to appear
+    	        WebElement suggestionBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("keySkillSugg")));
 
- 	    // Wait and select from suggestion
- 	    Actions actions = new Actions(driver);
- 	    actions.sendKeys(org.openqa.selenium.Keys.ARROW_DOWN).sendKeys(org.openqa.selenium.Keys.ENTER).perform();
+    	        // Select the first suggestion (BBT) using keyboard keys
+    	        new Actions(driver).sendKeys(org.openqa.selenium.Keys.ARROW_DOWN, org.openqa.selenium.Keys.ENTER).perform();
 
- 	    // Step 4: Save the skill changes
- 	    wait.until(ExpectedConditions.elementToBeClickable(keySkillSaveButton)).click();/////can u make code simple and short
-     }
+    	        // Save the updated skills
+    	        wait.until(ExpectedConditions.elementToBeClickable(keySkillSaveButton)).click();
+
+    	    } catch (Exception e) {
+    	        System.out.println("Skill 'BBT' might already be present or there was an issue adding it.");
+    	    }
+    	}
 	
 
 }
