@@ -57,7 +57,7 @@ public class DeleteResume {
 		deleteButton.click();
 		deletePopup.click();
 	//    uploadResume.click();
-		 uploadResume.sendKeys("C:\\Users\\Admin\\Downloads\\Pritesh_3.7_Exp.pdf.pdf");
+		 uploadResume.sendKeys("C:\\Users\\Admin\\Downloads\\Pritesh_3.7_Exp.pdf.pdf.pdf");//new path;
 //		Actions actions = new Actions(driver);
 //		actions.moveToElement(uploadResume).click().perform();
 		}
